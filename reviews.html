@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Reviews - Skye Window Blinds</title>
+
+        <!-- CSS FILES -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100;300;400;600;700&display=swap" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-icons.css" rel="stylesheet">
+        <link href="css/owl.carousel.min.css" rel="stylesheet">
+        <link href="css/tooplate-moso-interior.css" rel="stylesheet">
+        <link href="css/card.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <div id="sidebar" class="sidebar">
+                <button class="close-btn" onclick="toggleSidebar()">×</button>
+                <a href="index.html">Home</a>
+                <a href="shop-listing.html">Shop Listing</a>
+                <a href="shop-detail.html">Shop Detail</a>
+                <a href="cart.html">Cart</a>
+                <a href="about.html">About</a>
+                <a href="reviews.html">Reviews</a>
+                <a href="contact.html">Contact</a>
+            </div>
+
+            <button class="open-btn" onclick="toggleSidebar()">☰</button>
+
+            <section class="reviews-section section-padding pb-0" id="reviews">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-12">
+                            <h2 class="mt-2 mb-4">Customer <span class="text-muted">Reviews</span></h2>
+                            <div class="owl-carousel reviews-carousel">
+                                <div class="reviews-thumb">
+                                    <div class="reviews-body">
+                                        <h4>"The blinds are amazing! They completely transformed my living room."</h4>
+                                    </div>
+                                    <div class="reviews-bottom d-flex align-items-center">
+                                        <img src="images/avatar/customer1.jpg" class="avatar-image img-fluid" alt="Customer 1">
+                                        <p class="text-white mb-0 ms-3"><strong>Maria</strong>, Homeowner</p>
+                                    </div>
+                                </div>
+                                <div class="reviews-thumb">
+                                    <div class="reviews-body">
+                                        <h4>"Excellent service and high-quality products. Highly recommended!"</h4>
+                                    </div>
+                                    <div class="reviews-bottom d-flex align-items-center">
+                                        <img src="images/avatar/customer2.jpg" class="avatar-image img-fluid" alt="Customer 2">
+                                        <p class="text-white mb-0 ms-3"><strong>John</strong>, Business Owner</p>
+                                    </div>
+                                </div>
+                                <div class="reviews-thumb">
+                                    <div class="reviews-body">
+                                        <h4>"Affordable and stylish blinds. I couldn't be happier with my purchase."</h4>
+                                    </div>
+                                    <div class="reviews-bottom d-flex align-items-center">
+                                        <img src="images/avatar/customer3.jpg" class="avatar-image img-fluid" alt="Customer 3">
+                                        <p class="text-white mb-0 ms-3"><strong>Anna</strong>, Designer</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- JAVASCRIPT FILES -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/owl.carousel.min.js"></script>
+        <script src="js/custom.js"></script>
+        <script>
+            function toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.toggle('active');
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,117 @@
+{
+    "products": [
+      {
+        "name": "Roller Blinds",
+        "price_range": "₱1,000 - ₱4,500 per window",
+        "materials": ["Polyester Fabric", "Blackout Fabric", "Sunscreen Fabric"],
+        "colors": ["White", "Beige", "Grey", "Brown", "Custom Colors"],
+        "description": "Simple and modern blinds that roll up neatly. Available in blackout, sunscreen, and light-filtering fabrics. Easy to operate and maintain."
+      },
+      {
+        "name": "Combi Blinds",
+        "price_range": "₱1,200 - ₱4,800 per window",
+        "materials": ["Polyester Fabric", "PVC"],
+        "colors": ["White", "Grey", "Beige", "Brown", "Custom Colors"],
+        "description": "Dual-layer blinds that combine sheer and solid fabrics for versatile light control. Stylish and suitable for modern interiors."
+      },
+      {
+        "name": "Zebra Blinds",
+        "price_range": "₱1,300 - ₱5,000 per window",
+        "materials": ["Polyester Fabric"],
+        "colors": ["White", "Grey", "Beige", "Brown", "Custom Colors"],
+        "description": "Blinds with alternating sheer and solid stripes, allowing for adjustable light and privacy. Modern and dynamic look."
+      },
+      {
+        "name": "Vertical Blinds",
+        "price_range": "₱1,000 - ₱3,800 per window",
+        "materials": ["PVC", "Fabric"],
+        "colors": ["White", "Grey", "Beige", "Blue", "Custom Colors"],
+        "description": "Ideal for large windows and sliding doors. Slats can be rotated for light control and privacy."
+      },
+      {
+        "name": "Roman Blinds",
+        "price_range": "₱1,500 - ₱4,200 per window",
+        "materials": ["Cotton", "Linen", "Polyester"],
+        "colors": ["White", "Beige", "Grey", "Patterned", "Custom Colors"],
+        "description": "Elegant fabric blinds that fold into soft pleats. Adds a classic and cozy touch to any room."
+      },
+      {
+        "name": "Venetian Blinds",
+        "price_range": "₱1,200 - ₱4,000 per window",
+        "materials": ["Aluminum", "Wood", "PVC"],
+        "colors": ["White", "Beige", "Brown", "Grey", "Wood Grain"],
+        "description": "Blinds with horizontal slats that can be tilted for precise light control. Durable and easy to clean."
+      },
+      {
+        "name": "Pleated Blinds",
+        "price_range": "₱1,400 - ₱4,500 per window",
+        "materials": ["Polyester Fabric"],
+        "colors": ["White", "Grey", "Beige", "Custom Colors"],
+        "description": "Blinds with crisp, pleated fabric for a modern look. Compact and suitable for small spaces."
+      },
+      {
+        "name": "Blackout Blinds",
+        "price_range": "₱1,500 - ₱6,000 per window",
+        "materials": ["Blackout Fabric", "PVC"],
+        "colors": ["White", "Grey", "Beige", "Black", "Custom Colors"],
+        "description": "Designed to block out sunlight completely. Ideal for bedrooms, media rooms, or any space needing maximum privacy."
+      },
+      {
+        "name": "Sheer Blinds",
+        "price_range": "₱1,200 - ₱4,000 per window",
+        "materials": ["Sheer Fabric"],
+        "colors": ["White", "Beige", "Grey", "Custom Colors"],
+        "description": "Translucent blinds that diffuse natural light, creating a soft and airy atmosphere."
+      },
+      {
+        "name": "Skylight Blinds",
+        "price_range": "₱2,000 - ₱6,500 per window",
+        "materials": ["Polyester Fabric", "Blackout Fabric"],
+        "colors": ["White", "Beige", "Grey", "Custom Colors"],
+        "description": "Specially designed for skylight windows. Available in blackout and light-filtering options."
+      },
+      {
+        "name": "Motorized Blinds",
+        "price_range": "₱3,000 - ₱10,000 per window",
+        "materials": ["Varies by type"],
+        "colors": ["Customizable"],
+        "description": "Automated blinds for convenience and smart home integration. Available for most blind types."
+      },
+      {
+        "name": "Panel Blinds",
+        "price_range": "₱2,000 - ₱5,200 per window",
+        "materials": ["Fabric", "PVC"],
+        "colors": ["White", "Grey", "Beige", "Custom Colors"],
+        "description": "Large fabric panels ideal for wide windows or as room dividers. Smooth sliding operation."
+      }
+    ],
+    "services": [
+      {
+        "name": "Free Installation",
+        "description": "Professional installation service, ensuring a perfect fit and finish."
+      },
+      {
+        "name": "Free Quotation",
+        "description": "Get a free quote for your window treatment needs."
+      },
+      {
+        "name": "Measurement Tutorial",
+        "description": "Guide and tips on how to measure your windows accurately for the best fit."
+      },
+      {
+        "name": "Custom Measurements and Fittings",
+        "description": "Blinds are custom-made to your window sizes for a tailored look."
+      },
+      {
+        "name": "After-Sales Support",
+        "description": "Ongoing support for maintenance, repairs, and product questions."
+      },
+      {
+        "name": "Consultation",
+        "description": "Expert advice to help you choose the right blinds and materials for your space."
+      }
+    ],
+    "Measurement": [
+
+    ]
+  }
