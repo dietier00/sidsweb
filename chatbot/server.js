@@ -8,25 +8,47 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 const path = require('path');
 const fs = require('fs');
+const { MongoClient } = require('mongodb');
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+const mongoClient = new MongoClient(process.env.MONGO_URI);
+
+let db;
+
+async function connectMongo() {
+  try {
+    await mongoClient.connect();
+    db = mongoClient.db('blinds1'); // or your DB name
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error("MongoDB Connection Error:", err);
+  }
+}
+
+connectMongo();
 
 // Database configuration
 const dbConfig = {
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'blinds_db'
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'blinds_db',
+    port: process.env.DB_PORT || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 };
 
-// Function to get dashboard data
+// Function to get dashboard data with better error handling
 async function getDashboardData() {
-    const connection = await mysql.createConnection(dbConfig);
+    let connection;
     try {
+        connection = await mysql.createConnection(dbConfig);
+        
         // Get pending orders count
         const [orders] = await connection.execute(
             'SELECT COUNT(*) as count FROM orders WHERE status = "pending"'
@@ -52,8 +74,22 @@ async function getDashboardData() {
             unreadMessages: messages[0].count,
             productStats: products[0]
         };
+    } catch (error) {
+        console.error('Error in getDashboardData:', error);
+        return {
+            pendingOrders: 0,
+            unreadMessages: 0,
+            productStats: {
+                total_products: 0,
+                active_products: 0,
+                low_stock_products: 0,
+                total_stock: 0
+            }
+        };
     } finally {
-        await connection.end();
+        if (connection) {
+            await connection.end().catch(console.error);
+        }
     }
 }
 
@@ -82,36 +118,43 @@ wss.on('connection', async function connection(ws) {
     }
 });
 
-// Poll for websocket events
+// Poll for websocket events with better error handling
 async function checkForUpdates() {
-    const connection = await mysql.createConnection(dbConfig);
+    let connection;
     try {
+        connection = await mysql.createConnection(dbConfig);
         const [events] = await connection.execute(
             'SELECT * FROM websocket_events WHERE processed = 0 ORDER BY created_at ASC'
         );
 
         for (const event of events) {
-            const data = await getDashboardData();
-            broadcast({
-                type: event.event_type,
-                data: data
-            });
+            try {
+                const data = await getDashboardData();
+                broadcast({
+                    type: event.event_type,
+                    data: data
+                });
 
-            // Mark event as processed
-            await connection.execute(
-                'UPDATE websocket_events SET processed = 1 WHERE id = ?',
-                [event.id]
-            );
+                // Mark event as processed
+                await connection.execute(
+                    'UPDATE websocket_events SET processed = 1 WHERE id = ?',
+                    [event.id]
+                );
+            } catch (innerError) {
+                console.error('Error processing event:', innerError);
+            }
         }
     } catch (error) {
-        console.error('Error checking for updates:', error);
+        console.error('Error in checkForUpdates:', error);
     } finally {
-        await connection.end();
+        if (connection) {
+            await connection.end().catch(console.error);
+        }
     }
 }
 
-// Check for updates every second
-setInterval(checkForUpdates, 1000);
+// Reduce polling frequency to reduce server load
+setInterval(checkForUpdates, 5000); // Changed from 1000 to 5000ms
 
 // Enable CORS
 app.use(cors());
