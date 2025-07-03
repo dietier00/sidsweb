@@ -132,14 +132,14 @@ function refreshDashboard() {
 }
 
 function updateMetrics(data) {
-    // Update weekly sales
-    document.querySelector('.weekly-sales h3').textContent = '₱' + numberWithCommas(data.weeklySales.total);
-    const salesGrowthText = data.weeklySales.growth > 0 ? `+${data.weeklySales.growth}%` : `${data.weeklySales.growth}%`;
+    // Update monthly sales
+    document.querySelector('.weekly-sales h3').textContent = '₱' + numberWithCommas(data.monthlySales.total);
+    const salesGrowthText = data.monthlySales.growth > 0 ? `+${data.monthlySales.growth}%` : `${data.monthlySales.growth}%`;
     document.querySelector('.weekly-sales .growth-text').textContent = salesGrowthText;
     
-    // Update weekly profit
-    document.querySelector('.weekly-profit h3').textContent = '₱' + numberWithCommas(data.weeklySales.profit);
-    const profitGrowthText = data.weeklySales.profit_growth > 0 ? `+${data.weeklySales.profit_growth}%` : `${data.weeklySales.profit_growth}%`;
+    // Update monthly profit
+    document.querySelector('.weekly-profit h3').textContent = '₱' + numberWithCommas(data.monthlySales.profit);
+    const profitGrowthText = data.monthlySales.profit_growth > 0 ? `+${data.monthlySales.profit_growth}%` : `${data.monthlySales.profit_growth}%`;
     document.querySelector('.weekly-profit .profit-growth-text').textContent = profitGrowthText;
     
     // Update new users

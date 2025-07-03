@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['order_id'], $_POST['n
     try {
         $stmt = $pdo->prepare("
             UPDATE orders 
-            SET status = ?, updated_at = CURRENT_TIMESTAMP 
+            SET order_status = ?, updated_at = CURRENT_TIMESTAMP 
             WHERE id = ?
         ");
         $stmt->execute([$_POST['new_status'], $_POST['order_id']]);
@@ -33,19 +33,18 @@ $where_conditions = [];
 $params = [];
 
 if (isset($_GET['status']) && !empty($_GET['status'])) {
-    $where_conditions[] = "o.status = ?";
-    $params[] = $_GET['status'];
+    $where_conditions[] = "o.order_status = :status";
+    $params[':status'] = $_GET['status'];
 }
 
 if (isset($_GET['payment_status']) && !empty($_GET['payment_status'])) {
-    $where_conditions[] = "o.payment_status = ?";
-    $params[] = $_GET['payment_status'];
+    $where_conditions[] = "o.payment_status = :payment_status";
+    $params[':payment_status'] = $_GET['payment_status'];
 }
 
 if (isset($_GET['search']) && !empty($_GET['search'])) {
-    $where_conditions[] = "(o.order_number LIKE ? OR c.name LIKE ? OR c.email LIKE ?)";
-    $search_term = "%" . $_GET['search'] . "%";
-    $params = array_merge($params, [$search_term, $search_term, $search_term]);
+    $where_conditions[] = "(o.order_number LIKE :search OR c.name LIKE :search OR c.email LIKE :search)";
+    $params[':search'] = "%" . $_GET['search'] . "%";
 }
 
 $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
@@ -77,15 +76,14 @@ $orders_sql = "
     LIMIT :limit OFFSET :offset";
 
 $stmt = $pdo->prepare($orders_sql);
+
+// Bind filter parameters
+foreach ($params as $key => $value) {
+    $stmt->bindValue($key, $value);
+}
+// Bind limit and offset
 $stmt->bindValue(':limit', $items_per_page, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-
-// Bind other parameters if they exist
-$param_position = 1;
-foreach ($params as $param) {
-    $stmt->bindValue($param_position, $param);
-    $param_position++;
-}
 
 $stmt->execute();
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -218,8 +216,8 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </td>
                                         <td><?php echo $order['total_items']; ?> items</td>
                                         <td>
-                                            <span class="badge bg-<?php echo getStatusBadgeClass($order['status']); ?> status-badge">
-                                                <?php echo ucfirst($order['status']); ?>
+                                            <span class="badge bg-<?php echo getStatusBadgeClass($order['order_status']); ?> status-badge">
+                                                <?php echo ucfirst($order['order_status']); ?>
                                             </span>
                                         </td>
                                         <td>
@@ -239,7 +237,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#updateStatusModal"
                                                     data-order-id="<?php echo $order['id']; ?>"
-                                                    data-current-status="<?php echo $order['status']; ?>">
+                                                    data-current-status="<?php echo $order['order_status']; ?>">
                                                 <i class="bi bi-arrow-repeat"></i>
                                             </button>
                                         </td>

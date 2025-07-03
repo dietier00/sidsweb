@@ -1,102 +1,14 @@
 <?php 
-session_start();
-require_once '../php/db_connect.php';
-
-try {
-    // Fetch all active products
-    $sql = "SELECT * FROM products WHERE status = 'active' ORDER BY category, name";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
-    $error_message = "Database error occurred. Please try again later.";
-    error_log("Database error in productsdetail.php: " . $e->getMessage());
-}
+include_once('../header.php');
+// Load products from JSON file
+$productsJson = file_get_contents('products.json'); 
+$products = json_decode($productsJson, true);
 ?>
-<!doctype html>
-<html class="h-100" lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    <meta name="description" content="Skye Interior Design Services - Product Details">
-    <meta name="author" content="Skye Interior Design Services">
-    <meta name="HandheldFriendly" content="true">
-    <title>Our Products - Detailed View</title>
-    <!-- CSS FILES -->
-    <link rel="stylesheet" href="../css/theme.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100;300;400;600;700&display=swap" rel="stylesheet">
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/bootstrap-icons.css" rel="stylesheet">
-    <link href="../css/owl.carousel.min.css" rel="stylesheet">
-    <link href="../css/card.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="../favicon/favicon.ico">
-    <style>
-      .product-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 2rem;
-      }
-      
-      .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
-      }
-      
-      .product-image {
-        height: 300px;
-        object-fit: cover;
-        width: 100%;
-      }
-      
-      .category-section {
-        margin-bottom: 3rem;
-        padding-top: 2rem;
-      }
-      
-      .category-title {
-        position: relative;
-        padding-bottom: 0.5rem;
-        margin-bottom: 2rem;
-        color: #333;
-      }
-      
-      .category-title::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 50px;
-        height: 3px;
-        background-color: #0d6efd;
-      }
-      
-      .product-description {
-        height: 4.5em;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-      }
-      
-      .features-list {
-        font-size: 0.9rem;
-      }
-      
-      .stock-badge {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        z-index: 1;
-      }
-    </style>
-  </head>
-  <body class="bg-gray-100" data-bs-spy="scroll" data-bs-target="#navScroll">
+<body class="bg-gray-100" data-bs-spy="scroll" data-bs-target="#navScroll">
     <!-- Navbar -->
     <nav id="navScroll" class="navbar navbar-expand-lg navbar-light fixed-top" aria-label="Main navigation">
       <div class="container">
-        <a class="navbar-brand pe-4 fs-4" href="../index.html">
+        <a class="navbar-brand pe-4 fs-4" href="../index.php">
           <img src="../favicon/favicon.ico" alt="Skye Logo" style="height:40px; width:auto; vertical-align:middle; margin-right:8px;">
           <span class="ms-1 fw-bolder">Skye Blinds Interior Design Services</span>
         </a>
@@ -104,103 +16,125 @@ try {
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" href="../index.html">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="products.php">Products</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="../index.html#services">Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="../index.html#about">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="../index.html#contact">Contact</a>
-            </li>
-          </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" href="../index.php#gallery">Gallery</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#products" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Products
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                    <li><a class="dropdown-item" href="productsdetail.php">Product Details</a></li>
+                    <li><a class="dropdown-item" href="products.php">Product Listing</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../index.php#services">Services</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../index.php#about">About</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../users/contact.php">Contact</a>
+                </li>
+            </ul>
+            <div class="nav-item dropdown">
+                <a href="#" class="profile-icon" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end profile-menu" aria-labelledby="profileDropdown">
+                    <div id="profileContent">
+                        <!-- Content will be populated by JavaScript -->
+                    </div>
+                </ul>
+            </div>
         </div>
       </div>
     </nav>
 
     <main style="padding-top:80px;">
-      <!-- Products Display Section -->
-      <section class="products-section py-5">
-        <div class="container">
-          <h1 class="text-center mb-5">Our Products</h1>
-          
-          <?php if (isset($error_message)): ?>
-            <div class="alert alert-danger text-center">
-              <?php echo htmlspecialchars($error_message); ?>
+        <!-- Header Section copied from prods.html -->
+        <header class="site-header d-flex justify-content-center align-items-center mb-4" style="min-height:120px;">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center" data-aos="fade-down">
+                        <h1 class="display-6">Products Detail</h1>
+                    </div>
+                </div>
             </div>
-          <?php else: ?>
-            <?php
-            // Group products by category
-            $grouped_products = [];
-            foreach ($products as $product) {
-                $category = $product['category'];
-                if (!isset($grouped_products[$category])) {
-                    $grouped_products[$category] = [];
-                }
-                $grouped_products[$category][] = $product;
-            }
-            
-            // Display products by category
-            foreach ($grouped_products as $category => $category_products):
-            ?>
-            <div class="category-section">
-              <h2 class="category-title"><?php echo htmlspecialchars($category); ?></h2>
-              <div class="row">
-                <?php foreach ($category_products as $product): ?>
-                <div class="col-lg-6 col-md-6 mb-4">
-                  <div class="product-card bg-white rounded shadow-sm h-100 position-relative">
-                    <?php if($product['stock'] > 0): ?>
-                      <span class="badge bg-success stock-badge">In Stock</span>
-                    <?php else: ?>
-                      <span class="badge bg-danger stock-badge">Out of Stock</span>
-                    <?php endif; ?>
-                    
-                    <div class="row g-0">
-                      <div class="col-md-6">
-                        <img src="data:image/jpeg;base64,<?php echo base64_encode($product['images']); ?>"
-                             class="product-image rounded-start"
-                             alt="<?php echo htmlspecialchars($product['name']); ?>">
-                      </div>
-                      <div class="col-md-6">
-                        <div class="card-body">
-                          <h3 class="h5 mb-2"><?php echo htmlspecialchars($product['name']); ?></h3>
-                          <p class="h6 text-primary mb-3">₱<?php echo number_format($product['price'], 2); ?></p>
-                          <div class="product-description mb-3">
-                            <?php echo nl2br(htmlspecialchars($product['description'])); ?>
-                          </div>
-                          <div class="features-list">
-                            <p class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>Category: <?php echo htmlspecialchars($product['category']); ?></p>
-                            <?php if($product['stock'] > 0): ?>
-                            <p class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>Available: <?php echo $product['stock']; ?> units</p>
-                            <?php endif; ?>
-                            <?php if(isset($product['material']) && !empty($product['material'])): ?>
-                            <p class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>Material: <?php echo htmlspecialchars($product['material']); ?></p>
-                            <?php endif; ?>
-                            <?php if(isset($product['dimensions']) && !empty($product['dimensions'])): ?>
-                            <p class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>Size: <?php echo htmlspecialchars($product['dimensions']); ?></p>
-                            <?php endif; ?>
-                          </div>
-                        </div>
-                      </div>
+        </header>
+        
+        <!-- Loop through products and output sections with alternating layout -->
+        <?php $i = 0; foreach($products as $product): ?>
+          <section class="shop-detail-section section-padding <?php echo ($i % 2 == 0) ? '' : 'section-bg'; ?>" data-aos="<?php echo ($i % 2 == 0) ? 'fade-right' : 'fade-left'; ?>">
+            <div class="container">
+              <div class="row align-items-center">
+                <?php if($i % 2 == 0): ?>
+                  <div class="col-lg-6 col-12 m-auto">
+                    <div class="custom-block shop-detail-custom-block bg-white p-4 rounded shadow-sm">
+                      <h3 class="mb-3"><?php echo htmlspecialchars($product['name']); ?></h3>
+                      <p><?php echo htmlspecialchars($product['description']); ?></p>
+                      <p class="h6 text-primary">₱<?php echo number_format($product['price_php'], 2); ?></p>
                     </div>
                   </div>
-                </div>
-                <?php endforeach; ?>
+                  <div class="col-lg-6 col-12" data-aos="fade-left">
+                    <div class="shop-image-wrap text-center">
+                      <img src="<?php echo $product['image']; ?>" class="shop-image img-fluid rounded shadow" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                    </div>
+                  </div>
+                <?php else: ?>
+                  <div class="col-lg-6 col-12" data-aos="fade-right">
+                    <div class="shop-image-wrap text-center">
+                      <img src="<?php echo $product['image']; ?>" class="shop-image img-fluid rounded shadow" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-12 m-auto">
+                    <div class="custom-block shop-detail-custom-block bg-white p-4 rounded shadow-sm">
+                      <h3 class="mb-3"><?php echo htmlspecialchars($product['name']); ?></h3>
+                      <p><?php echo htmlspecialchars($product['description']); ?></p>
+                      <p class="h6 text-primary">₱<?php echo number_format($product['price_php'], 2); ?></p>
+                    </div>
+                  </div>
+                <?php endif; ?>
               </div>
             </div>
-            <?php endforeach; ?>
-          <?php endif; ?>
-        </div>
-      </section>
-    </main>
+          </section>
+        <?php $i++; endforeach; ?>
+        
+        <!-- Slideshow Section copied from prods.html -->
+        <br> 
+        <h1 class="text-center mb-4" data-aos="fade-up">Explore More Products</h1>
 
+        <section class="shop-detail-section section-padding pb-0 mt-5" data-aos="fade-up">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-12 mb-4">
+                        <div class="shop-thumb bg-white rounded shadow-sm h-100">
+                            <div class="shop-image-wrap text-center">
+                                <img src="../images/slideshow/vertical2.jpg" class="shop-image img-fluid rounded" alt="Vertical Blinds">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-12 mb-4">
+                        <div class="shop-thumb bg-white rounded shadow-sm h-100">
+                            <div class="shop-image-wrap text-center">
+                                <img src="../images/slideshow/panel.jpg" class="shop-image img-fluid rounded" alt="Panel Blinds">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-12 mb-4">
+                        <div class="shop-thumb bg-white rounded shadow-sm h-100">
+                            <div class="shop-image-wrap text-center">
+                                <img src="../images/slideshow/Crease-Combi-Blinds.jpg" class="shop-image img-fluid rounded" alt="Crease Combi Blinds">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
     <!-- JS Dependencies -->
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/aos.js"></script>
@@ -208,17 +142,18 @@ try {
       AOS.init({ duration: 800 });
     </script>
     <script>
-      // Navbar scroll shadow
+      // Navbar scroll shadow functionality
       let scrollpos = window.scrollY;
       const header = document.querySelector(".navbar");
       const header_height = header.offsetHeight;
       const add_class_on_scroll = () => header.classList.add("scrolled", "shadow-sm");
       const remove_class_on_scroll = () => header.classList.remove("scrolled", "shadow-sm");
       window.addEventListener('scroll', function() {
-        scrollpos = window.scrollY;
-        if (scrollpos >= header_height) { add_class_on_scroll(); }
-        else { remove_class_on_scroll(); }
+          scrollpos = window.scrollY;
+          if (scrollpos >= header_height) { add_class_on_scroll(); }
+          else { remove_class_on_scroll(); }
       });
     </script>
-  </body>
+    
+</body>
 </html>

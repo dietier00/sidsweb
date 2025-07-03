@@ -1,6 +1,5 @@
 <?php 
-session_start();
-require_once '../php/db_connect.php';
+include_once('../header.php');
 
 // Get filters from URL parameters
 $category = isset($_GET['category']) ? $_GET['category'] : '';
@@ -42,32 +41,11 @@ $sql .= " AND status = 'active' ORDER BY created_at DESC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
-<!doctype html>
-<html class="h-100" lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    <meta name="description" content="Skye Interior Design Services - Shop Listing">
-    <meta name="author" content="Skye Interior Design Services">
-    <meta name="HandheldFriendly" content="true">
-    <title>Products</title>
-    <link rel="stylesheet" href="../css/theme.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100;300;400;600;700&display=swap" rel="stylesheet">
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/bootstrap-icons.css" rel="stylesheet">
-    <link href="../css/owl.carousel.min.css" rel="stylesheet">
-    <link href="../css/card.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="../favicon/favicon.ico">
-  </head>
   <body class="bg-gray-100" data-bs-spy="scroll" data-bs-target="#navScroll">
     <nav id="navScroll" class="navbar navbar-expand-lg navbar-light fixed-top" aria-label="Main navigation">
       <div class="container">
-        <a class="navbar-brand pe-4 fs-4" href="../index.html">
+        <a class="navbar-brand pe-4 fs-4" href="../index.php">
           <img src="../favicon/favicon.ico" alt="Skye Logo" style="height:40px; width:auto; vertical-align:middle; margin-right:8px;">
           <span class="ms-1 fw-bolder">Skye Blinds Interior Design Services</span>
         </a>
@@ -77,43 +55,31 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                  <a class="nav-link" href="index.html#gallery">Gallery</a>
+                  <a class="nav-link" href="../index.php#gallery">Gallery</a>
                 </li>
                 <li class="nav-item dropdown">
-                  <button class="nav-link dropdown-toggle" href="index.html#products" 
-                          id="productsDropdown" 
-                          data-bs-toggle="dropdown" 
-                          aria-expanded="false"
-                          onKeyPress="handleKeyPress(event)">
+                  <a class="nav-link dropdown-toggle" href="#products" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Products
-                  </button>
+                  </a>
                   <ul class="dropdown-menu" aria-labelledby="productsDropdown">
                     <li><a class="dropdown-item" href="productsdetail.php">Product Details</a></li>
                     <li><a class="dropdown-item" href="products.php">Product Listing</a></li>
                   </ul>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../index.html#services">Services</a>
+                  <a class="nav-link" href="../index.php#services">Services</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../index.html#about">About</a>
+                  <a class="nav-link" href="../index.php#about">About</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="../index.html#contact">Contact</a>
+                  <a class="nav-link" href="../users/contact.php">Contact</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="cart.php">Cart</a>
-                </li>
-              </ul>
-              <div class="nav-item dropdown">
-                <button class="profile-icon" 
-                        id="profileDropdown" 
-                        data-bs-toggle="dropdown" 
-                        aria-expanded="false"
-                        onKeyPress="handleKeyPress(event)">
-                    <i class="fas fa-user" aria-hidden="true"></i>
-                    <span class="visually-hidden">User profile</span>
-                </button>
+            </ul>
+            <div class="nav-item dropdown">
+                <a href="#" class="profile-icon" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user"></i>
+                </a>
                 <ul class="dropdown-menu dropdown-menu-end profile-menu" aria-labelledby="profileDropdown">
                     <div id="profileContent">
                         <!-- Content will be populated by JavaScript -->
@@ -233,6 +199,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="shop-btn-wrap mt-3">
                           <?php if($product['stock'] > 0): ?>
                             <form method="post" action="cart.php" style="display: inline;">
+                              <input type="hidden" name="action" value="add">
                               <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
                               <input type="hidden" name="quantity" value="1">
                               <button type="submit" class="btn btn-warning btn-sm rounded-pill">Add to Cart</button>

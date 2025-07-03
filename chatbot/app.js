@@ -149,3 +149,48 @@ document.getElementById('refresh-chat')?.addEventListener('click', () => {
     addQuickReply("Show me your products");
     addQuickReply("I need pricing information");
 });
+
+// Initialize the chatbot when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize emoji picker
+    const picker = new EmojiMart.Picker({
+        theme: "light",
+        skinTonePosition: "none",
+        previewPosition: "none",
+        onEmojiSelect: (emoji) => {
+            const { selectionStart: start, selectionEnd: end } = messageInput;
+            messageInput.setRangeText(emoji.native, start, end, "end");
+            messageInput.focus();
+        },
+        onClickOutside: (e) => {
+            if (e.target.id === "emoji-picker") {
+                document.body.classList.toggle("show-emoji-picker");
+            } else {
+                document.body.classList.remove("show-emoji-picker");
+            }
+        },
+    });
+
+    document.querySelector(".chat-form").appendChild(picker);
+});
+
+// Handle file upload preview
+const fileInput = document.querySelector("#file-input");
+const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
+const fileCancelButton = fileUploadWrapper.querySelector("#file-cancel");
+
+fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        fileInput.value = "";
+        fileUploadWrapper.querySelector("img").src = e.target.result;
+        fileUploadWrapper.classList.add("file-uploaded");
+    };
+    reader.readAsDataURL(file);
+});
+
+fileCancelButton.addEventListener("click", () => {
+    fileUploadWrapper.classList.remove("file-uploaded");
+});

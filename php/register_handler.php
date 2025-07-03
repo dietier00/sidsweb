@@ -8,6 +8,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $contactnum = trim($_POST['contactnum']);
+    $facebook_id = $_POST['facebook_id'] ?? '';
+    $viber_id = $_POST['viber_id'] ?? '';
+
+    // Validate required fields
+    if (empty($fullname) || empty($username) || empty($email) || empty($password)) {
+        header('Location: ../users/register.php?error=' . urlencode('All required fields must be filled'));
+        exit;
+    }
 
     try {
         // Check if email already exists
@@ -30,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         // Insert new user
-        $stmt = $pdo->prepare("INSERT INTO customers (name, username, password, email, phone) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$fullname, $username, $hashed_password, $email, $contactnum]);
+        $stmt = $pdo->prepare("INSERT INTO customers (name, username, password, email, phone, facebook_id, viber_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$fullname, $username, $hashed_password, $email, $contactnum, $facebook_id, $viber_id]);
 
         // Redirect to login page with success message
         header("Location: ../users/login.php?success=1");

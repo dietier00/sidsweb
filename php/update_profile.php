@@ -8,12 +8,14 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_id = $_SESSION['user_id'];
     $name = trim($_POST['name']);
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
     $address = trim($_POST['address']);
-    $user_id = $_SESSION['user_id'];
+    $facebook_id = trim($_POST['facebook_id'] ?? '');
+    $viber_id = trim($_POST['viber_id'] ?? '');
 
     try {
         // Check if email is already taken by another user
@@ -21,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email, $user_id]);
         if ($stmt->rowCount() > 0) {
             $_SESSION['error'] = "Email is already taken by another user";
-            header("Location: ../users/profile.php");
+            header('Location: ../users/profile.php');
             exit();
         }
 
@@ -30,22 +32,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$username, $user_id]);
         if ($stmt->rowCount() > 0) {
             $_SESSION['error'] = "Username is already taken by another user";
-            header("Location: ../users/profile.php");
+            header('Location: ../users/profile.php');
             exit();
         }
 
-        // Update profile
-        $stmt = $pdo->prepare("UPDATE customers SET name = ?, username = ?, email = ?, phone = ?, address = ? WHERE id = ?");
-        if ($stmt->execute([$name, $username, $email, $phone, $address, $user_id])) {
-            $_SESSION['success'] = "Profile updated successfully";
-        } else {
-            $_SESSION['error'] = "Error updating profile";
-        }
-    } catch(PDOException $e) {
-        $_SESSION['error'] = "An error occurred while updating your profile";
-    }
-}
+        // Update user profile
+        $stmt = $pdo->prepare("
+            UPDATE customers 
+            SET name = ?, username = ?, email = ?, 
+                phone = ?, address = ?, facebook_id = ?, 
+                viber_id = ?
+            WHERE id = ?
+        ");
+        
+        $stmt->execute([
+            $name, $username, $email, 
+            $phone, $address, $facebook_id, 
+            $viber_id, $user_id
+        ]);
 
-header("Location: ../users/profile.php");
-exit();
+        $_SESSION['success'] = "Profile updated successfully";
+    } catch (PDOException $e) {
+        $_SESSION['error'] = "An error occurred while updating your profile";
+        error_log("Profile update error: " . $e->getMessage());
+    }
+
+    header('Location: ../users/profile.php');
+    exit();
+} else {
+    header('Location: ../users/profile.php');
+    exit();
+}
 ?>

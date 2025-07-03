@@ -135,62 +135,65 @@ if (isset($_POST['mark_read']) && isset($_POST['message_id'])) {
                                         <p class="mt-3 mb-0">No messages found</p>
                                     </div>
                                 <?php else: ?>
-                                    <?php foreach ($messages as $message): ?>
-                                        <div class="message-card card mb-3 <?php echo $message['status'] === 'unread' ? 'unread' : ''; ?>">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between align-items-start">
-                                                    <div>
-                                                        <h5 class="card-title mb-1"><?php echo htmlspecialchars($message['subject']); ?></h5>
-                                                        <p class="mb-1">
-                                                            From: <strong><?php echo htmlspecialchars($message['name']); ?></strong>
-                                                            &lt;<?php echo htmlspecialchars($message['email']); ?>&gt;
-                                                        </p>
-                                                        <p class="message-preview mb-2"><?php echo htmlspecialchars($message['message']); ?></p>
-                                                        <span class="message-timestamp"><?php echo $message['formatted_date']; ?></span>
-                                                    </div>
-                                                    <div class="ms-3">
-                                                        <?php if ($message['status'] === 'unread'): ?>
-                                                            <form method="POST" class="d-inline">
-                                                                <input type="hidden" name="message_id" value="<?php echo $message['id']; ?>">
-                                                                <button type="submit" name="mark_read" class="btn btn-sm btn-outline-primary">
-                                                                    <i class="bi bi-envelope-open"></i> Mark as Read
-                                                                </button>
-                                                            </form>
-                                                        <?php endif; ?>
-                                                        <button type="button" class="btn btn-sm btn-outline-info ms-2" 
-                                                                data-bs-toggle="modal" 
-                                                                data-bs-target="#messageModal" 
-                                                                data-message="<?php echo htmlspecialchars($message['message']); ?>"
-                                                                data-subject="<?php echo htmlspecialchars($message['subject']); ?>"
-                                                                data-name="<?php echo htmlspecialchars($message['name']); ?>"
-                                                                data-email="<?php echo htmlspecialchars($message['email']); ?>"
-                                                                data-date="<?php echo $message['formatted_date']; ?>">
-                                                            <i class="bi bi-eye"></i> View
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Facebook</th>
+                                                    <th>Viber</th>
+                                                    <th>Preferred Contact</th>
+                                                    <th>Subject</th>
+                                                    <th>Status</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($messages as $message): ?>
+                                                    <tr>
+                                                        <td><?php echo date('Y-m-d H:i', strtotime($message['created_at'])); ?></td>
+                                                        <td><?php echo htmlspecialchars($message['name']); ?></td>
+                                                        <td><?php echo htmlspecialchars($message['email']); ?></td>
+                                                        <td><?php echo $message['facebook'] ? htmlspecialchars($message['facebook']) : '-'; ?></td>
+                                                        <td><?php echo $message['viber'] ? htmlspecialchars($message['viber']) : '-'; ?></td>
+                                                        <td><?php echo ucfirst(htmlspecialchars($message['preferred_contact'])); ?></td>
+                                                        <td><?php echo htmlspecialchars($message['subject']); ?></td>
+                                                        <td>
+                                                            <span class="badge bg-<?php echo getStatusColor($message['status']); ?>">
+                                                                <?php echo ucfirst($message['status']); ?>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-info view-message" data-id="<?php echo $message['id']; ?>">
+                                                                View
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
 
-                                    <!-- Pagination -->
-                                    <?php if ($total_pages > 1): ?>
-                                    <nav aria-label="Messages navigation" class="mt-4">
-                                        <ul class="pagination justify-content-center">
-                                            <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-                                                <a class="page-link" href="?page=<?php echo $page-1; ?>">Previous</a>
-                                            </li>
-                                            <?php for($i = 1; $i <= $total_pages; $i++): ?>
-                                            <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
-                                                <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                            </li>
-                                            <?php endfor; ?>
-                                            <li class="page-item <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">
-                                                <a class="page-link" href="?page=<?php echo $page+1; ?>">Next</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                    <?php endif; ?>
+                                                <!-- Pagination -->
+                                                <?php if ($total_pages > 1): ?>
+                                                <nav aria-label="Messages navigation" class="mt-4">
+                                                    <ul class="pagination justify-content-center">
+                                                        <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
+                                                            <a class="page-link" href="?page=<?php echo $page-1; ?>">Previous</a>
+                                                        </li>
+                                                        <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                                                        <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
+                                                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                                        </li>
+                                                        <?php endfor; ?>
+                                                        <li class="page-item <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">
+                                                            <a class="page-link" href="?page=<?php echo $page+1; ?>">Next</a>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                                <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>

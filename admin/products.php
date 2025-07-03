@@ -1,4 +1,5 @@
-<?php
+<?php 
+
 session_start();
 if(!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: index.php");
@@ -18,8 +19,8 @@ $total_products = $count_stmt->fetch(PDO::FETCH_ASSOC)['total'];
 $total_pages = ceil($total_products / $items_per_page);
 
 // Get products for current page
-$products_sql = "SELECT p.*, a.name as created_by_name 
-                FROM products p 
+$products_sql = "SELECT p.*, a.name as created_by_name
+                FROM products p
                 LEFT JOIN admins a ON p.created_by = a.id
                 ORDER BY p.created_at DESC 
                 LIMIT :limit OFFSET :offset";

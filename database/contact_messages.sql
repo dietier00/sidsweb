@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS contact_messages (
     replied_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    facebook VARCHAR(100) DEFAULT NULL,
+    viber VARCHAR(50) DEFAULT NULL,
+    preferred_contact ENUM('email', 'facebook', 'viber') NOT NULL DEFAULT 'email',
     FOREIGN KEY (assigned_to) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

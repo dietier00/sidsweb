@@ -107,6 +107,20 @@
                     </button>
                 </div>
             </div>
+            <div class="form-group mb-3">
+                <label for="phone">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number">
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="facebook">Facebook Profile (optional)</label>
+                <input type="text" class="form-control" id="facebook" name="facebook_id" placeholder="Enter your Facebook profile URL or username">
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="viber">Viber Number (optional)</label>
+                <input type="tel" class="form-control" id="viber" name="viber_id" placeholder="Enter your Viber number">
+            </div>
             <button type="submit" class="btn btn-primary btn-register">Register</button>
         </form>
         <div class="login-link">

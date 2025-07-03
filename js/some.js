@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });  
   
-  document.getElementById('pricingForm').addEventListener('submit', function(e) {
+document.getElementById('pricingForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const product = document.getElementById('productType').value;
     const length = parseFloat(document.getElementById('length').value);
@@ -46,5 +46,66 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
     `;
   });
+
+// Chatbot initialization
+window.initializeChatbot = function(userData) {
+  const chatBody = document.querySelector('.chat-body');
+  const userName = userData.name || localStorage.getItem('userName');
+  
+  if (userName) {
+    const welcomeMessage = chatBody.querySelector('.message-text');
+    welcomeMessage.innerHTML = `
+      Hey ${userName}! 👋<br>
+      How can I help you today?
+      <div class="quick-actions">
+        <button class="quick-action-btn" data-action="get-started">
+          <span class="material-symbols-rounded">rocket_launch</span> Get Started
+        </button>
+        <button class="quick-action-btn" data-action="product-recommendation">
+          <span class="material-symbols-rounded">format_list_bulleted</span> Product Recommendation
+        </button>
+        <button class="quick-action-btn" data-action="measurement">
+          <span class="material-symbols-rounded">straighten</span> Get Price Estimate
+        </button>
+      </div>
+    `;
+  }
+
+  // Initialize Material Icons
+  document.querySelectorAll('.material-symbols-rounded').forEach(icon => {
+    icon.style.fontFamily = 'Material Symbols Rounded';
+  });
+
+  // Add smooth animations
+  document.querySelectorAll('.message').forEach(msg => {
+    msg.style.opacity = '0';
+    msg.style.transform = 'translateY(20px)';
+    requestAnimationFrame(() => {
+      msg.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      msg.style.opacity = '1';
+      msg.style.transform = 'translateY(0)';
+    });
+  });
+};
+
+// Handle quick action buttons
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.quick-action-btn')) {
+    const button = e.target.closest('.quick-action-btn');
+    const action = button.dataset.action;
+    
+    switch(action) {
+      case 'get-started':
+        appendMessage("I'd like to get started with choosing blinds for my home.", 'user');
+        break;
+      case 'product-recommendation':
+        appendMessage("Can you recommend some products for me?", 'user');
+        break;
+      case 'measurement':
+        appendMessage("I'd like to get a price estimate based on my window measurements.", 'user');
+        break;
+    }
+  }
+});
 
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kye</title>
+  <link rel="stylesheet" href="chatbot.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+</head>
+<body>
+  <div class="chatbot-container">
+    <div class="chatbot-header">
+      <img src="AIchatbot.gif" alt="Echo Robot" class="robot-animation" width="100" height="100" style="border-radius:50%; box-shadow:0 4px 16px rgba(99, 102, 243, 0.2);">
+      <div class="glow-animation"></div>
+      <h2>Kye</h2>
+      <p>Your ChatBot Assistant</p>
+    </div>
+    
+    <div class="chatbot-body">
+      <div id="welcome-screen" class="welcome-screen">
+        
+        <p class="welcome-text">Hi, what can we help you with?</p>
+        
+        <div class="quick-options">
+          <button class="quick-option" data-option="order-status">
+            <span class="icon">📦</span>
+            <span>Order Status</span>
+          </button>
+          <button class="quick-option" data-option="product-recommendations">
+            <span class="icon">✨</span>
+            <span>Product Recommendations</span>
+          </button>
+        </div>
+        
+        <button id="question-btn" class="question-btn">
+          <span>I have a question</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div id="chat-screen" class="chat-screen" style="display:none;">
+        <!-- Persistent quick options bar -->
+        <div class="chat-quick-options">
+          <button class="quick-option" data-option="order-status">
+            <span class="icon">📦</span>
+            <span>Order Status</span>
+          </button>
+          <button class="quick-option" data-option="product-recommendations">
+            <span class="icon">✨</span>
+            <span>Product Recommendations</span>
+          </button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <!-- Messages will appear here -->
+        </div>
+        
+        <!-- Product carousel for recommendations -->
+        <div id="product-carousel" class="product-carousel" style="display:none;"></div>
+        
+        <!-- Order status modal -->
+        <div id="order-status-modal" class="order-status-modal" style="display:none;">
+          <div class="order-status-content">
+            <span id="close-order-status" class="close">&times;</span>
+            <h3>Check Order Status</h3>
+            <input type="text" id="order-number-input" placeholder="Enter your order number">
+            <button id="check-order-btn">Check Status</button>
+            <div id="order-status-result"></div>
+          </div>
+        </div>
+        
+        <div class="chat-input">
+          <input type="text" id="user-input" placeholder="Type your message...">
+          <button id="send-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="chatbot.js"></script>
+</body>
+</html>

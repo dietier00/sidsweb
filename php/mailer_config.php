@@ -43,7 +43,7 @@ function sendMail($to, $subject, $body, $from_email, $from_name) {
             </div>
             
             <div style='margin-top: 20px; padding-top: 20px; border-top: 1px solid #dee2e6; color: #666; font-size: 12px;'>
-                <p>This e-mail was sent from Skye Blinds contact form.</p>
+                <p>This e-mail was sent from Skye Blinds Interior Design Services contact form.</p>
                 <p>© " . date('Y') . " Skye Blinds Interior Design Services. All rights reserved.</p>
             </div>
         </div>";

@@ -184,7 +184,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
                     <div class="col-md-3">
                         <div class="card bg-primary text-white weekly-sales metric-card">
                             <div class="card-body">
-                                <h5>Weekly Sales</h5>
+                                <h5>Monthly Sales</h5>
                                 <h3>₱0</h3>
                                 <p class="growth-text mb-0"></p>
                             </div>
@@ -193,7 +193,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
                     <div class="col-md-3">
                         <div class="card bg-success text-white weekly-profit metric-card">
                             <div class="card-body">
-                                <h5>Weekly Profit</h5>
+                                <h5>Monthly Profit</h5>
                                 <h3>₱0</h3>
                                 <p class="profit-growth-text mb-0"></p>
                             </div>

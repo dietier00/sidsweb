@@ -1,136 +1,197 @@
 const chatBody = document.querySelector(".chat-body");
 const messageInput = document.querySelector(".message-input");
-const sendMessage = document.querySelector("#send-message");
-const fileInput = document.querySelector("#file-input");
-const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
-const fileCancelButton = fileUploadWrapper.querySelector("#file-cancel");
-const chatbotToggler = document.querySelector("#chatbot-toggler");
-const closeChatbot = document.querySelector("#close-chatbot");
+const sendButton = document.querySelector("#send-message");
+const chatToggler = document.querySelector("#chatbot-toggler");
+const closeBtn = document.querySelector("#close-chatbot");
 
-const userData = {
-  message: null,
+let userSession = {
+  id: localStorage.getItem('chatSessionId') || Math.random().toString(36).substring(2, 15),
+  name: localStorage.getItem('userName') || null
 };
 
-const initialInputHeight = messageInput.scrollHeight;
+// Initialize chat and event listeners
+function initializeChat() {
+  localStorage.setItem('chatSessionId', userSession.id);
+  
+  // Initial greeting
+  appendBotMessage({
+    text: userSession.name 
+      ? `Welcome back, ${userSession.name}! How can I help you today?`
+      : "Hi there! 👋😁\nHow can I help you today?",
+    showQuickActions: true
+  });
 
-const createMessageElement = (content, ...classes) => {
-  const div = document.createElement("div");
-  div.classList.add("message", ...classes);
-  div.innerHTML = content;
-  return div;
-};
+  // Event listeners
+  sendButton.addEventListener("click", handleOutgoingMessage);
+  messageInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey && messageInput.value.trim()) {
+      e.preventDefault();
+      handleOutgoingMessage(e);
+    }
+  });
 
-const generateBotResponse = async (incomingMessageDiv) => {
-  const messageElement = incomingMessageDiv.querySelector(".message-text");
+  chatBody.addEventListener("click", (e) => {
+    if (e.target.closest(".quick-action-btn")) {
+      const action = e.target.closest(".quick-action-btn").dataset.action;
+      handleQuickAction(action);
+    }
+    if (e.target.closest(".view-product-btn")) {
+      const productId = e.target.closest(".view-product-btn").dataset.productId;
+      window.location.href = `shop/productsdetail.php?id=${productId}`;
+    }
+  });
+
+  chatToggler.addEventListener("click", () => {
+    document.body.classList.toggle("show-chatbot");
+    if (document.body.classList.contains("show-chatbot")) {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+  });
+
+  closeBtn.addEventListener("click", () => {
+    document.body.classList.remove("show-chatbot");
+  });
+}
+
+// Handle outgoing messages
+async function handleOutgoingMessage(e) {
+  e.preventDefault();
+  const message = messageInput.value.trim();
+  if (!message) return;
+
+  // Clear input
+  messageInput.value = "";
+  messageInput.style.height = "44px";
+
+  // Append user message
+  appendUserMessage(message);
+
+  // Show typing indicator
+  const botMessageDiv = appendBotMessage({ 
+    text: '<div class="thinking-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>' 
+  });
 
   try {
     const response = await fetch("http://localhost:3000/message", {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
-      },
-      body: JSON.stringify({ message: userData.message }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        message,
+        sessionId: userSession.id,
+        userName: userSession.name
+      })
     });
 
     const data = await response.json();
-
-    messageElement.innerText = data.reply || "Sorry, I didn’t catch that.";
-  } catch (error) {
-    console.log(error);
-    messageElement.innerText = "Something went wrong. Please try again later.";
-    messageElement.style.color = "#ff0000";
-  } finally {
-    incomingMessageDiv.classList.remove("thinking");
-    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-  }
-};
-
-const handleOutgoingMessage = (e) => {
-  e.preventDefault();
-  userData.message = messageInput.value.trim();
-  if (!userData.message) return;
-
-  messageInput.value = "";
-  messageInput.dispatchEvent(new Event("input"));
-  fileUploadWrapper.classList.remove("file-uploaded");
-
-  const messageContent = `<div class="message-text"></div>`;
-  const outgoingMessageDiv = createMessageElement(messageContent, "user-message");
-  outgoingMessageDiv.querySelector(".message-text").innerText = userData.message;
-  chatBody.appendChild(outgoingMessageDiv);
-  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-
-  setTimeout(() => {
-    const messageContent = `
-      <svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
-        <path d="..."/>
-      </svg>
-      <div class="message-text">
-        <div class="thinking-indicator">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-      </div>`;
-    const incomingMessageDiv = createMessageElement(messageContent, "bot-message", "thinking");
-    chatBody.appendChild(incomingMessageDiv);
-    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-    generateBotResponse(incomingMessageDiv);
-  }, 600);
-};
-
-messageInput.addEventListener("input", () => {
-  messageInput.style.height = `${initialInputHeight}px`;
-  messageInput.style.height = `${messageInput.scrollHeight}px`;
-  document.querySelector(".chat-form").style.borderRadius = messageInput.scrollHeight > initialInputHeight ? "15px" : "32px";
-});
-
-messageInput.addEventListener("keydown", (e) => {
-  const userMessage = e.target.value.trim();
-  if (e.key === "Enter" && !e.shiftKey && userMessage && window.innerWidth > 768) {
-    handleOutgoingMessage(e);
-  }
-});
-
-fileInput.addEventListener("change", () => {
-  const file = fileInput.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    fileInput.value = "";
-    fileUploadWrapper.querySelector("img").src = e.target.result;
-    fileUploadWrapper.classList.add("file-uploaded");
-  };
-  reader.readAsDataURL(file);
-});
-
-fileCancelButton.addEventListener("click", () => {
-  fileUploadWrapper.classList.remove("file-uploaded");
-});
-
-const picker = new EmojiMart.Picker({
-  theme: "light",
-  skinTonePosition: "none",
-  previewPosition: "none",
-  onEmojiSelect: (emoji) => {
-    const { selectionStart: start, selectionEnd: end } = messageInput;
-    messageInput.setRangeText(emoji.native, start, end, "end");
-    messageInput.focus();
-  },
-  onClickOutside: (e) => {
-    if (e.target.id === "emoji-picker") {
-      document.body.classList.toggle("show-emoji-picker");
-    } else {
-      document.body.classList.remove("show-emoji-picker");
+    
+    if (data.error) {
+      throw new Error(data.error);
     }
-  },
-});
 
-document.querySelector(".chat-form").appendChild(picker);
-sendMessage.addEventListener("click", (e) => handleOutgoingMessage(e));
-document.querySelector("#file-upload").addEventListener("click", () => fileInput.click());
-closeChatbot.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
-chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
+    // Update bot message with response
+    if (data.type === 'product_recommendation') {
+      const productHtml = createProductCard(data.product);
+      botMessageDiv.querySelector('.message-text').innerHTML = productHtml;
+    } else {
+      botMessageDiv.querySelector('.message-text').innerHTML = data.reply;
+    }
+
+    // Add quick actions if needed
+    if (data.showQuickActions) {
+      appendQuickActions(botMessageDiv);
+    }
+
+  } catch (error) {
+    console.error("Chat error:", error);
+    botMessageDiv.querySelector('.message-text').innerHTML = "Sorry, I'm having trouble connecting. Please try again.";
+  }
+
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// Handle quick actions
+function handleQuickAction(action) {
+  let message = "";
+  
+  switch(action) {
+    case "get-started":
+      message = "I'd like to get started with choosing window treatments.";
+      break;
+    case "product-recommendation":
+      message = "Can you recommend some products for me?";
+      break;
+    case "measurement":
+      message = "I'd like to get a price estimate based on my window measurements.";
+      break;
+  }
+
+  if (message) {
+    messageInput.value = message;
+    sendButton.click();
+  }
+}
+
+// Create product card HTML
+function createProductCard(product) {
+  return `
+    <div class="product-card">
+      <img src="${product.image}" alt="${product.name}">
+      <h3>${product.name}</h3>
+      <p>${product.description}</p>
+      <p class="price">${product.price_range}</p>
+      <a href="shop/productsdetail.php?id=${product.id}" class="btn view-product-btn" data-product-id="${product.id}">View Product</a>
+    </div>
+  `;
+}
+
+// Append quick action buttons
+function appendQuickActions(messageDiv) {
+  const quickActions = document.createElement('div');
+  quickActions.className = 'quick-actions';
+  quickActions.innerHTML = `
+    <button class="quick-action-btn" data-action="get-started">
+      <span class="material-symbols-rounded">rocket_launch</span> Get Started
+    </button>
+    <button class="quick-action-btn" data-action="product-recommendation">
+      <span class="material-symbols-rounded">format_list_bulleted</span> Product Recommendation
+    </button>
+    <button class="quick-action-btn" data-action="measurement">
+      <span class="material-symbols-rounded">straighten</span> Get Price Estimate
+    </button>
+  `;
+  messageDiv.querySelector('.message-text').appendChild(quickActions);
+}
+
+// Helper function to append user message
+function appendUserMessage(text) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message user-message';
+  messageDiv.innerHTML = `<div class="message-text">${text}</div>`;
+  chatBody.appendChild(messageDiv);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// Helper function to append bot message
+function appendBotMessage({ text, showQuickActions = false }) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message bot-message';
+  messageDiv.innerHTML = `
+    <svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 1024 1024">
+      <path d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9z"/>
+    </svg>
+    <div class="message-text">${text}</div>
+  `;
+  
+  if (showQuickActions) {
+    appendQuickActions(messageDiv);
+  }
+  
+  chatBody.appendChild(messageDiv);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return messageDiv;
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initializeChat);
 
 

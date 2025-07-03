@@ -1,0 +1,73 @@
+[
+    {
+      "id": "b001",
+      "name": "Zebra Blinds",
+      "description": "Modern dual-layered zebra blinds that let you adjust light and privacy with a sleek, minimalist stripe design.",
+      "price_php": 1071,
+      "image": "../images/slideshow/zebra.jpg"
+    },
+    {
+      "id": "b002",
+      "name": "Faux Wood Blinds",
+      "description": "Durable, moisture‑resistant faux-wood blinds that mimic real wood—the perfect low-maintenance option for any room.",
+      "price_php": 700,
+        "image": "../images/home/fauxwood.jpg"
+    },
+    {
+      "id": "b003",
+      "name": "Blackout Blinds",
+      "description": "Engineered to block 100% of sunlight—ideal for nurseries, bedrooms, or media rooms where complete darkness is needed.",
+      "price_php": 472,
+        "image": "../images/slideshow/blackout.jpg"
+    },
+    {
+      "id": "b004",
+      "name": "Roman Shades",
+      "description": "Elegantly stackable when opened and smooth when down—Roman shades bring a tailored, timeless look to any space.",
+      "price_php": 3220,
+        "image": "../images/home/Roman-Blinds.jpg"
+    },
+    {
+      "id": "b005",
+      "name": "Roller Blinds",
+      "description": "Clean, functional roller blinds that are easy to operate—great for both homes and offices.",
+      "price_php": 89,
+        "image": "../images/slideshow/roller2.jpg"
+    },
+    {
+      "id": "b006",
+      "name": "Venetian Blinds",
+      "description": "Adjustable horizontal slats (wood, PVC, or aluminum) offering precise control over light and privacy.",
+      "price_php": 263,
+        "image": "../images/home/venetians.jpg"
+    },
+    {
+      "id": "b007",
+      "name": "Cellular (Honeycomb) Shades",
+      "description": "Energy-efficient honeycomb structure traps air for insulation, while offering soft, filtered light.",
+      "price_php": 1890,
+        "image": "../images/home/cellular.jpg"
+    },
+    {
+      "id": "b008",
+      "name": "Vertical Blinds",
+      "description": "Ideal for sliding doors and large windows, these vertical panels slide aside to open and tilt to control light.",
+      "price_php": 79,
+        "image": "../images/slideshow/vertical.jpg"
+    },
+    {
+      "id": "b009",
+      "name": "Wooden Blinds",
+      "description": "Classic, warm real-wood blinds that add premium style—best for dry indoor rooms like living areas and studies.",
+      "price_php": 5250,
+        "image": "../images/home/wooden.jpg"
+    },
+    {
+      "id": "b010",
+      "name": "Motorized Blinds",
+      "description": "For smart-home lovers, these blinds can be controlled via remote or app—great for high or hard-to-reach windows.",
+      "price_php": 1507,
+        "image": "../images/home/motorized.jpg"
+    }
+  ]
+  

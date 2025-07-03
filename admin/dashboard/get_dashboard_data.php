@@ -50,49 +50,49 @@ try {
         'total_stock' => (int)$summary['total_stock']
     ];
 
-    // Get weekly sales and profit data
-    $weeklySales = $pdo->query("
+    // Get monthly sales and profit data
+    $monthlySales = $pdo->query("
         SELECT 
             COALESCE(SUM(o.total_amount), 0) as total,
             COUNT(*) as order_count,
             COALESCE(SUM(oi.total_price - (oi.quantity * p.cost)), 0) as profit,
             COALESCE(SUM(CASE 
-                WHEN o.created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)
-                AND o.created_at < DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
+                WHEN o.created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 2 MONTH)
+                AND o.created_at < DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
                 THEN o.total_amount 
                 ELSE 0 
-            END), 0) as previous_week_total,
+            END), 0) as previous_month_total,
             COALESCE(SUM(CASE 
-                WHEN o.created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)
-                AND o.created_at < DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
+                WHEN o.created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 2 MONTH)
+                AND o.created_at < DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
                 THEN (oi.total_price - (oi.quantity * p.cost))
                 ELSE 0 
-            END), 0) as previous_week_profit
+            END), 0) as previous_month_profit
         FROM orders o 
         JOIN order_items oi ON o.id = oi.order_id
         JOIN products p ON oi.product_id = p.id
-        WHERE o.created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)
+        WHERE o.created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 2 MONTH)
         AND o.payment_status = 'paid'
     ")->fetch(PDO::FETCH_ASSOC);
 
     // Calculate growth percentages
-    $currentWeekTotal = (float)$weeklySales['total'];
-    $previousWeekTotal = (float)$weeklySales['previous_week_total'];
-    $currentWeekProfit = (float)$weeklySales['profit'];
-    $previousWeekProfit = (float)$weeklySales['previous_week_profit'];
+    $currentMonthTotal = (float)$monthlySales['total'];
+    $previousMonthTotal = (float)$monthlySales['previous_month_total'];
+    $currentMonthProfit = (float)$monthlySales['profit'];
+    $previousMonthProfit = (float)$monthlySales['previous_month_profit'];
 
-    $salesGrowth = $previousWeekTotal > 0 
-        ? (($currentWeekTotal - $previousWeekTotal) / $previousWeekTotal) * 100 
+    $salesGrowth = $previousMonthTotal > 0 
+        ? (($currentMonthTotal - $previousMonthTotal) / $previousMonthTotal) * 100 
         : 100;
 
-    $profitGrowth = $previousWeekProfit > 0 
-        ? (($currentWeekProfit - $previousWeekProfit) / $previousWeekProfit) * 100 
+    $profitGrowth = $previousMonthProfit > 0 
+        ? (($currentMonthProfit - $previousMonthProfit) / $previousMonthProfit) * 100 
         : 100;
 
-    $response['weeklySales'] = [
-        'total' => $currentWeekTotal,
-        'profit' => $currentWeekProfit,
-        'order_count' => (int)$weeklySales['order_count'],
+    $response['monthlySales'] = [
+        'total' => $currentMonthTotal,
+        'profit' => $currentMonthProfit,
+        'order_count' => (int)$monthlySales['order_count'],
         'growth' => round($salesGrowth, 2),
         'profit_growth' => round($profitGrowth, 2)
     ];

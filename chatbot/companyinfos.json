@@ -111,7 +111,28 @@
         "description": "Expert advice to help you choose the right blinds and materials for your space."
       }
     ],
-    "Measurement": [
-
-    ]
-  }
+   "measurement": {
+      "inside_mount": {
+        "description": "Blinds will fit inside the window frame. This provides a clean, minimalist, and built-in look.",
+        "steps": [
+          "Step 1: Measure the inside width of the frame at the top, middle, and bottom. Record the smallest measurement.",
+          "Step 2: Measure the inside height of the frame on the left, center, and right. Record the smallest measurement.",
+          "Step 3: Do NOT make any deductions. Our factory will adjust the size for a perfect fit."
+        ]
+      },
+      "outside_mount": {
+        "description": "Blinds will be mounted outside the window frame on the wall or trim. This is ideal for shallow frames or maximum light blocking.",
+        "steps": [
+          "Step 1: Measure the total width you want the blinds to cover. Add 2–3 inches to each side beyond the window frame for better coverage.",
+          "Step 2: Measure the height from where you want the blinds to start (usually above the frame) down to the desired endpoint. Add 2–3 inches below the window frame if needed."
+        ]
+      },
+      "tips": [
+        "Check for any obstructions like window handles, cranks, or molding before measuring.",
+        "Use a metal tape measure for accuracy.",
+        "Record measurements in either inches or centimeters — just be consistent.",
+        "Double-check all measurements. Measure twice, order once.",
+        "Round down to the nearest 1/8 inch (or 0.32 cm) for best accuracy."
+      ]
+    }
+}

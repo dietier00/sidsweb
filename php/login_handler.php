@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             // Redirect to index page
-            header("Location: ../index.html");
+            header("Location: ../index.php");
             exit();
         } else {
             // Invalid credentials

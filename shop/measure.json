@@ -1,0 +1,27 @@
+[
+    {
+    "width": 24,
+    "height": 46,
+    "price": 1200
+    },
+    {
+    "width": 30,
+    "height": 60,
+    "price": 1500
+    },
+    {
+    "width": 36,
+    "height": 72,
+    "price": 1800
+    },
+    {
+    "width": 48,
+    "height": 84,
+    "price": 2200
+    },
+    {
+    "width": 60,
+    "height": 96,
+    "price": 2600
+    }
+]

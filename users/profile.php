@@ -1,108 +1,54 @@
 <?php
-session_start();
-require_once('../php/db_connect.php');
-
-// Redirect if not logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../login.php');
-    exit();
-}
-
-// Get user information
-$stmt = $pdo->prepare("SELECT * FROM customers WHERE id = ?");
-$stmt->execute([$_SESSION['user_id']]);
-$user = $stmt->fetch();
-
-// If user not found, redirect to login
-if (!$user) {
-    session_destroy();
-    header('Location: ../login.php');
-    exit();
-}
+include_once('../header.php');
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/theme.min.css">
-    <link href="../css/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 76px;
-        }
-        .profile-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            padding: 30px;
-            margin-top: 20px;
-        }
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #eee;
-        }
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            background: #DDA853;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            margin: 0 auto;
-        }
-        .info-label {
-            font-weight: 600;
-            color: #666;
-        }
-        .info-value {
-            color: #333;
-        }
-        .edit-btn {
-            background-color: #DDA853;
-            border: none;
-            padding: 8px 20px;
-            transition: all 0.3s;
-        }
-        .edit-btn:hover {
-            background-color: #27548A;
-        }
-    </style>
-</head>
-<body>
     <!-- Navigation Bar -->
     <nav id="navScroll" class="navbar navbar-expand-lg navbar-light fixed-top" tabindex="0">
         <div class="container">
-            <a class="navbar-brand pe-4 fs-4" href="../index.html">
+            <a class="navbar-brand pe-4 fs-4" href="../index.php">
                 <img src="../favicon/favicon.ico" alt="Skye Logo" style="height:40px; width:auto; vertical-align:middle; margin-right:8px;">
                 <span class="ms-1 fw-bolder">Skye Blinds Interior Design Services</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Home</a>
+                        <a class="nav-link" href="../index.php#gallery">Gallery</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#products" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Products
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                            <li><a class="dropdown-item" href="../shop/productsdetail.php">Product Details</a></li>
+                            <li><a class="dropdown-item" href="../shop/products.php">Product Listing</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../shop/cart.php">Cart</a>
+                        <a class="nav-link" href="../index.php#services">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../php/logout.php">Logout</a>
+                        <a class="nav-link" href="../index.php#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../users/contact.php">Contact</a>
                     </li>
                 </ul>
+                <!-- Add Profile Icon -->
+                <div class="nav-item dropdown">
+                    <a href="#" class="profile-icon" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end profile-menu" aria-labelledby="profileDropdown">
+                        <div id="profileContent">
+                            <!-- Content will be populated by JavaScript -->
+                        </div>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
@@ -209,6 +155,14 @@ if (!$user) {
                         <div class="mb-3">
                             <label for="edit_address" class="form-label">Address</label>
                             <textarea class="form-control" id="edit_address" name="address" rows="3"><?php echo htmlspecialchars($user['address']); ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="facebook" class="form-label">Facebook Profile</label>
+                            <input type="text" class="form-control" id="facebook" name="facebook_id" value="<?php echo htmlspecialchars($user['facebook_id'] ?? ''); ?>" placeholder="Enter your Facebook profile URL or username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="viber" class="form-label">Viber Number</label>
+                            <input type="tel" class="form-control" id="viber" name="viber_id" value="<?php echo htmlspecialchars($user['viber_id'] ?? ''); ?>" placeholder="Enter your Viber number">
                         </div>
                     </div>
                     <div class="modal-footer">
